@@ -17,12 +17,12 @@ Además, el proyecto incluye la base para un módulo de análisis inteligente de
   Preparado para integración futura con inteligencia artificial (procesamiento de texto).
 
 
-# Futuras mejoras
+## Futuras mejoras
 
 Integración del módulo Hugging Face para registro automático de tareas a partir de texto.
 Implementación de reconocimiento de voz.
 Visualización de progreso y estadísticas de productividad.
 
-# Integrantes: 
+### Integrantes: 
   Emmanuel Rios Castro
   Amanda Calderón Cordero
