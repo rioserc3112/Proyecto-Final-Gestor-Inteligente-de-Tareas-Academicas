@@ -4,6 +4,10 @@
  */
 package Login;
 
+import Controlador.ControladorTareas;
+import Modelo.Tarea;
+import Vista.FormularioPrincipal;
+
 /**
  *
  * @author amanda
@@ -159,10 +163,26 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCorreoActionPerformed
 
+    
+    //Cuando el usuario presiona el bton de login
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         // TODO add your handling code here:
+        
+        //Si lo datos estan correctos usar esta funcion para iniciar el programa
+        iniciarPrograma();
     }//GEN-LAST:event_btnEntrarActionPerformed
 
+    
+    //Si el usuario tiene los datos de la cuenta correctos
+    private void iniciarPrograma(){
+        FormularioPrincipal vista = new FormularioPrincipal();
+        Tarea modelo = new Tarea();
+
+        ControladorTareas controlador = new ControladorTareas(modelo, vista);
+        
+        vista.setVisible(true);
+    }
+    
     /**
      * @param args the command line arguments
      */

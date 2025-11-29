@@ -64,14 +64,24 @@ public class FormularioPrincipal extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane1.setViewportView(TablaTareasPrincipales);
+        if (TablaTareasPrincipales.getColumnModel().getColumnCount() > 0) {
+            TablaTareasPrincipales.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
         jLabel2.setFont(new java.awt.Font("Noto Sans", 1, 20)); // NOI18N
         jLabel2.setText("GESTIÓN DE TAREAS");

@@ -24,7 +24,7 @@ import javax.swing.table.TableModel;
 
 
 public class ControladorTareas {
-    public static int contador = 0;
+    public static int contador;
     
     private Tarea modelo;
     private FormularioPrincipal vista;
@@ -34,9 +34,13 @@ public class ControladorTareas {
     public ControladorTareas(Tarea modelo, FormularioPrincipal vista) {
         this.modelo = modelo;
         this.vista = vista;
-        
-        
+                
         //Aqui va toda la logica de la controladora
+        contador = contarRegistros();
+        mostrarDatos();
+        
+        
+        //Para agregar datos cuando se presiona el boton agregar:
         
         this.vista.btnAgregar.addActionListener(new ActionListener() {
             @Override
@@ -54,10 +58,42 @@ public class ControladorTareas {
         return contador;
     }
     
+    
+    public int contarRegistros(){
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM lista_tareas";
+
+        try (
+            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+    
+    
     public void agregarDatos(){
-        modelo= new Tarea(generarID());
         
+
+        modelo = new Tarea(generarID());
+        
+        //Debe estar seleccionada una linea para agregarla
         int rec = vista.TablaTareasPrincipales.getSelectedRow();
+        if (rec == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+            return;
+        }
+        
+        
+        //Se extraen los datos de la fila seleccionada:
         String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
         modelo.setTarea(tareaSeleccionada);
         
@@ -74,27 +110,82 @@ public class ControladorTareas {
         String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
         modelo.setDescripcion(DescripcionSeleccionada);
         
-    
-         
+            
+       /*  
        try {
-           String sql = "INSERT INTO Persona VALUES (?,?,?,?,?)";
+           String sql = "INSERT INTO lista_tareas (id,tarea,fecha,responsable,estado,descripcion) VALUES (?,?,?,?,?,?)";
     
            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
-            pstmt.setInt(0, modelo.getId());
-            pstmt.setString(1, modelo.getTarea());
-            pstmt.setString(2, modelo.getFecha());
-            pstmt.setString(3, modelo.getResponsable());
-            pstmt.setString(4,modelo.getEstado());
-            pstmt.setString(4,modelo.getDescripcion());
+            pstmt.setInt(1, modelo.getId());
+            pstmt.setString(2, modelo.getTarea());
+            
+            //Para insertar la fecha:
+            String fechaStr = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(fechaStr);
+            pstmt.setDate(3, fechaSQL);
+            
+            
+            
+            pstmt.setString(4, modelo.getResponsable());
+            pstmt.setString(5,modelo.getEstado());
+            pstmt.setString(6,modelo.getDescripcion());
             pstmt.executeUpdate();
-           
-        
+            
        } 
        catch (SQLException e) 
         {
             e.printStackTrace();
         }
+
+
+    */
+
     }// fn del metodo agregar datos 
+    
+    public void mostrarDatos(){
+        
+        DefaultTableModel tabla = new DefaultTableModel();// crea una tabla por defecto
+        int indice;// Ek indice para recorrer la tabla de la base de datos
+        
+        // Se crean las columna de la tabla
+        tabla.addColumn("ID");
+        tabla.addColumn("Tarea");
+        tabla.addColumn("Fecha");
+        tabla.addColumn("Responsable");
+        tabla.addColumn("Estado");
+        tabla.addColumn("Descripcion");
+        tabla.setRowCount(contarRegistros());
+        
+        try
+        {
+            PreparedStatement da = conectar.Conectar().prepareStatement("select * from lista_tareas"); 
+            ResultSet tbl = da.executeQuery();
+            
+            
+            indice=0; 
+            while(tbl.next())
+            { 
+         
+            tabla.setValueAt(tbl.getString("id"),indice,0); 
+            tabla.setValueAt(tbl.getString("Tarea"),indice,1); 
+            tabla.setValueAt(tbl.getString("Fecha"),indice,2);
+            tabla.setValueAt(tbl.getString("Responsable"),indice,3);
+            tabla.setValueAt(tbl.getString("Estado"),indice,4);
+            tabla.setValueAt(tbl.getString("Descripcion"),indice,5);
+            
+         
+            indice++; 
+            }
+        }
+            catch(SQLException e)
+            {
+                    
+                e.printStackTrace();
+            }
+    
+        vista.TablaTareasPrincipales.setModel(tabla);
+        
+    }
        
     
     
