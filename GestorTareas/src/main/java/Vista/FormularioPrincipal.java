@@ -80,7 +80,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaTareasPrincipales);
         if (TablaTareasPrincipales.getColumnModel().getColumnCount() > 0) {
-            TablaTareasPrincipales.getColumnModel().getColumn(0).setMaxWidth(50);
+            TablaTareasPrincipales.getColumnModel().getColumn(0).setMaxWidth(35);
         }
 
         jLabel2.setFont(new java.awt.Font("Noto Sans", 1, 20)); // NOI18N

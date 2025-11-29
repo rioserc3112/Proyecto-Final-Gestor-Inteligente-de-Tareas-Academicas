@@ -7,6 +7,7 @@ package Login;
 import Controlador.ControladorTareas;
 import Modelo.Tarea;
 import Vista.FormularioPrincipal;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -156,7 +157,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblPasswordActionPerformed
 
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Jelou Amanda");
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed

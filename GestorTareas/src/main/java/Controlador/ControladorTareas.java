@@ -111,7 +111,7 @@ public class ControladorTareas {
         modelo.setDescripcion(DescripcionSeleccionada);
         
             
-       /*  
+       
        try {
            String sql = "INSERT INTO lista_tareas (id,tarea,fecha,responsable,estado,descripcion) VALUES (?,?,?,?,?,?)";
     
@@ -125,7 +125,6 @@ public class ControladorTareas {
             pstmt.setDate(3, fechaSQL);
             
             
-            
             pstmt.setString(4, modelo.getResponsable());
             pstmt.setString(5,modelo.getEstado());
             pstmt.setString(6,modelo.getDescripcion());
@@ -136,9 +135,11 @@ public class ControladorTareas {
         {
             e.printStackTrace();
         }
+       
+       mostrarDatos();
 
 
-    */
+    
 
     }// fn del metodo agregar datos 
     
@@ -154,7 +155,7 @@ public class ControladorTareas {
         tabla.addColumn("Responsable");
         tabla.addColumn("Estado");
         tabla.addColumn("Descripcion");
-        tabla.setRowCount(contarRegistros());
+        tabla.setRowCount(contarRegistros()+1);
         
         try
         {
