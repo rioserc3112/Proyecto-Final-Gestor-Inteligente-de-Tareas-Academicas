@@ -46,7 +46,13 @@ public class ControladorTareas {
             @Override
             public void actionPerformed(ActionEvent e) {
                 agregarDatos();
-                //mostrarDatos();
+            }
+        });
+        
+        this.vista.btnCompletar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                marcarCompletado();
             }
         });
         
@@ -143,10 +149,49 @@ public class ControladorTareas {
 
     }// fn del metodo agregar datos 
     
+        public void marcarCompletado(){
+        
+
+        modelo = new Tarea(generarID());
+        
+        //Debe estar seleccionada una linea para agregarla
+        int rec = vista.TablaTareasPrincipales.getSelectedRow();
+        if (rec == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+            return;
+        }
+        
+        
+        //Se extrae el ID
+        int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
+        modelo.setId(idSeleccionado);
+             
+       
+       try {
+           String sql = "UPDATE lista_tareas set estado='Completado' where id=?";
+    
+            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
+            pstmt.setInt(1, modelo.getId());
+            
+            pstmt.executeUpdate();
+            
+       } 
+       catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+       
+       mostrarDatos();
+
+
+    
+
+    }// fn del metodo marcarCompletado()
+    
     public void mostrarDatos(){
         
         DefaultTableModel tabla = new DefaultTableModel();// crea una tabla por defecto
-        int indice;// Ek indice para recorrer la tabla de la base de datos
+        int indice;// El indice para recorrer la tabla de la base de datos
         
         // Se crean las columna de la tabla
         tabla.addColumn("ID");
