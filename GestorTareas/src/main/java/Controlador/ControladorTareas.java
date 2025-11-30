@@ -56,6 +56,13 @@ public class ControladorTareas {
             }
         });
         
+        this.vista.btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eliminarTarea();
+            }
+        });
+        
         
     }// Fin de ControladorTareas
         
@@ -187,6 +194,65 @@ public class ControladorTareas {
     
 
     }// fn del metodo marcarCompletado()
+        
+        public void eliminarTarea(){
+        
+
+        modelo = new Tarea(generarID());
+        
+        //Debe estar seleccionada una linea para agregarla
+        int rec = vista.TablaTareasPrincipales.getSelectedRow();
+        if (rec == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+            return;
+        }
+        
+        
+        //Se extrae el ID y tarea
+        int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
+        modelo.setId(idSeleccionado);
+        
+        String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
+        modelo.setTarea(tareaSeleccionada);
+        
+        
+        //Se confirma si realmente desea eliminar tarea
+        
+        int opcion = JOptionPane.showConfirmDialog(
+            vista,
+            "Realmente desea eliminar la tarea '" + tareaSeleccionada + "'?",
+            "Confirmar eliminación",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+        
+        if (opcion == JOptionPane.CANCEL_OPTION) {
+            //Si se elije que no, entonces se termina la función
+            return;
+        } 
+        
+       //Si usuario desea continuar se elimina por celda seleccionada
+        
+       try {
+           String sql = "DELETE from lista_tareas where id=?";
+    
+            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
+            pstmt.setInt(1, modelo.getId());
+            
+            pstmt.executeUpdate();
+            
+       } 
+       catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+       
+       mostrarDatos();
+
+
+    
+
+    }// fn del metodo eliminarTarea()
     
     public void mostrarDatos(){
         
