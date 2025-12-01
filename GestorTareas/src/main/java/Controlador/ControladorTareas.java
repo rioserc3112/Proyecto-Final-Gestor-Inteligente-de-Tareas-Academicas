@@ -32,7 +32,7 @@ public class ControladorTareas {
         this.vista = vista;
                 
         //Aqui va todos los Action Listeners
-        contador = contarRegistros();
+        contador = buscarUltimoID();
         mostrarDatos();
         
         
@@ -107,7 +107,27 @@ public class ControladorTareas {
     
     public int contarRegistros(){
         int count = 0;
-        String sql = "SELECT MAX(*) id FROM lista_tareas"; //Selecciona el ultimo ID que existe en la tabla
+        String sql = "SELECT COUNT(*) FROM lista_tareas"; //Regresa la cuenta de registros de la tabla
+
+        try (
+            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+    
+    public int buscarUltimoID(){
+        int count = 0;
+        String sql = "SELECT MAX(ID) id FROM lista_tareas"; //Selecciona el ultimo ID que existe en la tabla
 
         try (
             PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql);
@@ -381,6 +401,8 @@ public class ControladorTareas {
             e.printStackTrace();
         }
        
+       
+       contador = buscarUltimoID(); // Para actualizar la cantidad de lineas que hay
        mostrarDatos();
 
 
