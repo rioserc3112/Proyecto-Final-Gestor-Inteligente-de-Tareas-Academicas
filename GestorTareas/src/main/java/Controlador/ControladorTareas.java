@@ -45,6 +45,10 @@ public class ControladorTareas {
         this.vista.btnAgregar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (vista.TablaTareasPrincipales.isEditing()) {
+                    vista.TablaTareasPrincipales.getCellEditor().stopCellEditing();
+                }
+                
                 agregarDatos();
             }
         });
@@ -60,6 +64,17 @@ public class ControladorTareas {
             @Override
             public void actionPerformed(ActionEvent e) {
                 eliminarTarea();
+            }
+        });
+        
+        this.vista.btnEditar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (vista.TablaTareasPrincipales.isEditing()) {
+                    vista.TablaTareasPrincipales.getCellEditor().stopCellEditing();
+                }
+
+                editarTarea();
             }
         });
         
@@ -195,6 +210,83 @@ public class ControladorTareas {
 
     }// fn del metodo marcarCompletado()
         
+        public void editarTarea(){
+        
+
+        modelo = new Tarea(generarID());
+        
+        //Debe estar seleccionada una linea para agregarla
+        int rec = vista.TablaTareasPrincipales.getSelectedRow();
+        if (rec == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+            return;
+        }
+        
+        
+        //Se extraen los datos de la fila seleccionada:
+        //ID:
+        int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
+        modelo.setId(idSeleccionado);
+        
+        
+        String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
+        modelo.setTarea(tareaSeleccionada);
+        
+        String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
+        modelo.setFecha(FechaSeleccionada);
+        
+        
+        String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
+        modelo.setResponsable(ResponsableSeleccionado);
+        
+        String EstadoSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 4).toString();
+        modelo.setEstado(EstadoSeleccionado);
+        
+        String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
+        modelo.setDescripcion(DescripcionSeleccionada);
+             
+       
+       try {
+           String sql = "UPDATE lista_tareas "
+                   + "set tarea=?, "
+                   + "fecha=?,"
+                   + "responsable=?,"
+                   + "estado=?, "
+                   + "descripcion=? "
+                   + "where id=?";
+    
+            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
+            pstmt.setString(1, modelo.getTarea());
+            
+            
+            //Para insertar la fecha:
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(FechaSeleccionada);
+            pstmt.setDate(2, fechaSQL);
+            
+            
+            pstmt.setString(3, modelo.getResponsable());
+            pstmt.setString(4, modelo.getEstado());
+            pstmt.setString(5, modelo.getDescripcion());
+            pstmt.setInt(6, modelo.getId());
+            
+            
+            pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(vista, "¡Se actualizó la tarea con exito!", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+            
+       } 
+       catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+       
+       mostrarDatos();
+
+
+    
+
+    }// fn del metodo editarTarea()
+        
         public void eliminarTarea(){
         
 
@@ -257,7 +349,7 @@ public class ControladorTareas {
     public void mostrarDatos(){
         
         DefaultTableModel tabla = new DefaultTableModel();// crea una tabla por defecto
-        int indice;// El indice para recorrer la tabla de la base de datos
+        int indice = 0;// El indice para recorrer la tabla de la base de datos
         
         // Se crean las columna de la tabla
         tabla.addColumn("ID");
@@ -274,7 +366,6 @@ public class ControladorTareas {
             ResultSet tbl = da.executeQuery();
             
             
-            indice=0; 
             while(tbl.next())
             { 
          
@@ -294,6 +385,10 @@ public class ControladorTareas {
                     
                 e.printStackTrace();
             }
+        
+        
+        //Para que la útlima fila diga algo
+        tabla.setValueAt("Ingrese un tarea",indice,1); 
     
         vista.TablaTareasPrincipales.setModel(tabla);
         
