@@ -122,21 +122,29 @@ public class ControladorTareas {
         
         
         //Se extraen los datos de la fila seleccionada:
-        String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
-        modelo.setTarea(tareaSeleccionada);
+
         
-        String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
-        modelo.setFecha(FechaSeleccionada);
-        
-        
-        String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
-        modelo.setResponsable(ResponsableSeleccionado);
-        
-        String EstadoSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 4).toString();
-        modelo.setEstado(EstadoSeleccionado);
-        
-        String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
-        modelo.setDescripcion(DescripcionSeleccionada);
+        try{
+            String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
+            modelo.setTarea(tareaSeleccionada);
+
+            String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
+            modelo.setFecha(FechaSeleccionada);
+
+
+            String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
+            modelo.setResponsable(ResponsableSeleccionado);
+
+            String EstadoSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 4).toString();
+            modelo.setEstado(EstadoSeleccionado);
+
+            String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
+            modelo.setDescripcion(DescripcionSeleccionada);
+        }
+        catch(NullPointerException e){
+            JOptionPane.showMessageDialog(vista, "Debe de completar todos los campos para agregar una tarea", "Complete todos los campos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         
             
        
@@ -148,20 +156,30 @@ public class ControladorTareas {
             pstmt.setString(2, modelo.getTarea());
             
             //Para insertar la fecha:
-            String fechaStr = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
-            java.sql.Date fechaSQL = java.sql.Date.valueOf(fechaStr);
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(modelo.getFecha());
             pstmt.setDate(3, fechaSQL);
             
             
             pstmt.setString(4, modelo.getResponsable());
             pstmt.setString(5,modelo.getEstado());
             pstmt.setString(6,modelo.getDescripcion());
+            
             pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(vista, "¡Se agregaron los datos correctamente!", "Agregado", JOptionPane.INFORMATION_MESSAGE);
             
        } 
        catch (SQLException e) 
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(vista, "No se puede agregar una fila ya existente", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+       
+       catch (IllegalArgumentException e) 
+        {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(vista, "La fecha ingresada es incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
        
        mostrarDatos();
@@ -218,7 +236,7 @@ public class ControladorTareas {
         //Debe estar seleccionada una linea para agregarla
         int rec = vista.TablaTareasPrincipales.getSelectedRow();
         if (rec == -1) {
-            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+            JOptionPane.showMessageDialog(vista, "Debe de seleccionar una fila primero", "Seleccione fila", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         
@@ -234,7 +252,6 @@ public class ControladorTareas {
         
         String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
         modelo.setFecha(FechaSeleccionada);
-        
         
         String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
         modelo.setResponsable(ResponsableSeleccionado);
