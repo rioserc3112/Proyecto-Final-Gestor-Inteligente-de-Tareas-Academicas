@@ -51,7 +51,7 @@ public class FormularioPrincipal extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(204, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(153, 153, 255), null, new java.awt.Color(0, 204, 204)));
 
-        TablaTareasPrincipales.setForeground(new java.awt.Color(204, 204, 255));
+        TablaTareasPrincipales.setForeground(new java.awt.Color(0, 0, 0));
         TablaTareasPrincipales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
