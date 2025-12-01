@@ -35,12 +35,11 @@ public class ControladorTareas {
         this.modelo = modelo;
         this.vista = vista;
                 
-        //Aqui va toda la logica de la controladora
+        //Aqui va todos los Action Listeners
         contador = contarRegistros();
         mostrarDatos();
         
         
-        //Para agregar datos cuando se presiona el boton agregar:
         
         this.vista.btnAgregar.addActionListener(new ActionListener() {
             @Override
@@ -78,9 +77,32 @@ public class ControladorTareas {
             }
         });
         
+        this.vista.TablaTareasPrincipales.getSelectionModel().addListSelectionListener(e -> {
+            
+            //Si se selecciona la última fila, borrar el texto que contiene
+        if (!e.getValueIsAdjusting()) {
+            int filaSeleccionada = vista.TablaTareasPrincipales.getSelectedRow();
+            int ultimaFila = vista.TablaTareasPrincipales.getRowCount() - 1;
+
+        if (filaSeleccionada == ultimaFila) {
+            //Se pone en blanco la columna de Tarea
+            this.vista.TablaTareasPrincipales.setValueAt("",ultimaFila,1); 
+            
+            //Se pone la fecha de hoy a la columna de fecha
+            this.vista.TablaTareasPrincipales.setValueAt(java.time.LocalDate.now().toString(),ultimaFila,2); 
+            
+        }
+    }
+});
+        
         
     }// Fin de ControladorTareas
         
+    
+    
+    //Aqui va toda la logica de la controladora
+    
+    
     public int generarID(){
         contador++;
         return contador;
@@ -243,6 +265,8 @@ public class ControladorTareas {
         
         //Se extraen los datos de la fila seleccionada:
         //ID:
+        
+        try{
         int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
         modelo.setId(idSeleccionado);
         
@@ -261,6 +285,11 @@ public class ControladorTareas {
         
         String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
         modelo.setDescripcion(DescripcionSeleccionada);
+        }
+        catch(NullPointerException e){
+            JOptionPane.showMessageDialog(vista, "Debe de completar todos los campos para agregar una tarea", "Complete todos los campos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
              
        
        try {
@@ -277,7 +306,7 @@ public class ControladorTareas {
             
             
             //Para insertar la fecha:
-            java.sql.Date fechaSQL = java.sql.Date.valueOf(FechaSeleccionada);
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(modelo.getFecha());
             pstmt.setDate(2, fechaSQL);
             
             
@@ -405,7 +434,7 @@ public class ControladorTareas {
         
         
         //Para que la útlima fila diga algo
-        tabla.setValueAt("Ingrese un tarea",indice,1); 
+        tabla.setValueAt("Ingrese una tarea",indice,1); 
     
         vista.TablaTareasPrincipales.setModel(tabla);
         
