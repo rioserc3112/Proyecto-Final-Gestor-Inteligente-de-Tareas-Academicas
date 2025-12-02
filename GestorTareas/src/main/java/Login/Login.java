@@ -79,6 +79,11 @@ public class Login extends javax.swing.JFrame {
 
         btnCrearCuenta.setBackground(new java.awt.Color(204, 255, 255));
         btnCrearCuenta.setText("Crear cuenta");
+        btnCrearCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearCuentaActionPerformed(evt);
+            }
+        });
 
         btnMensaje.setFont(new java.awt.Font("Nimbus Sans", 2, 18)); // NOI18N
         btnMensaje.setForeground(new java.awt.Color(0, 102, 153));
@@ -157,7 +162,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblPasswordActionPerformed
 
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
-        JOptionPane.showMessageDialog(this, "Jelou Amanda");
+        JOptionPane.showMessageDialog(this, "Mande un Sinpe al equipo de Soporte de IT al 8888-1000 para reiniciar su contraseña");
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
@@ -172,6 +177,12 @@ public class Login extends javax.swing.JFrame {
         //Si lo datos estan correctos usar esta funcion para iniciar el programa
         iniciarPrograma();
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
+        CrearCuenta FormCrearCuenta = new CrearCuenta();
+        
+        FormCrearCuenta.setVisible(true);
+    }//GEN-LAST:event_btnCrearCuentaActionPerformed
 
     
     //Si el usuario tiene los datos de la cuenta correctos
