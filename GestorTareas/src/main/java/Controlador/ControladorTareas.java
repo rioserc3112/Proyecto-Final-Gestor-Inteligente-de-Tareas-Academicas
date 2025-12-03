@@ -230,119 +230,116 @@ public class ControladorTareas {
         public void marcarCompletado(){
         
 
-        modelo = new Tarea(generarID());
-        
-        //Debe estar seleccionada una linea para agregarla
-        int rec = vista.TablaTareasPrincipales.getSelectedRow();
-        if (rec == -1) {
-            JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
-            return;
-        }
-        
-        
-        //Se extrae el ID
-        int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
-        modelo.setId(idSeleccionado);
-             
-       
-       try {
-           String sql = "UPDATE lista_tareas set estado='Completado' where id=?";
-    
-            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
-            pstmt.setInt(1, modelo.getId());
-            
-            pstmt.executeUpdate();
-            
-       } 
-       catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
+            modelo = new Tarea(generarID());
+
+            //Debe estar seleccionada una linea para agregarla
+            int rec = vista.TablaTareasPrincipales.getSelectedRow();
+            if (rec == -1) {
+                JOptionPane.showMessageDialog(null, "Seleccione una fila primero.");
+                return;
+            }
+
+
+            //Se extrae el ID
+            int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
+            modelo.setId(idSeleccionado);
+
+
+           try {
+               String sql = "UPDATE lista_tareas set estado='Completado' where id=?";
+
+                PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
+                pstmt.setInt(1, modelo.getId());
+
+                pstmt.executeUpdate();
+
+           } 
+           catch (SQLException e) 
+            {
+                e.printStackTrace();
+            }
        
        mostrarDatos();
-
-
-    
 
     }// fn del metodo marcarCompletado()
         
         public void editarTarea(){
         
 
-        modelo = new Tarea(generarID());
-        
-        //Debe estar seleccionada una linea para agregarla
-        int rec = vista.TablaTareasPrincipales.getSelectedRow();
-        if (rec == -1) {
-            JOptionPane.showMessageDialog(vista, "Debe de seleccionar una fila primero", "Seleccione fila", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        
-        //Se extraen los datos de la fila seleccionada:
-        //ID:
-        
-        try{
-        int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
-        modelo.setId(idSeleccionado);
-        
-        
-        String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
-        modelo.setTarea(tareaSeleccionada);
-        
-        String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
-        modelo.setFecha(FechaSeleccionada);
-        
-        String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
-        modelo.setResponsable(ResponsableSeleccionado);
-        
-        String EstadoSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 4).toString();
-        modelo.setEstado(EstadoSeleccionado);
-        
-        String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
-        modelo.setDescripcion(DescripcionSeleccionada);
-        }
-        catch(NullPointerException e){
-            JOptionPane.showMessageDialog(vista, "Debe de completar todos los campos para agregar una tarea", "Complete todos los campos", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-             
-       
-       try {
-           String sql = "UPDATE lista_tareas "
-                   + "set tarea=?, "
-                   + "fecha=?,"
-                   + "responsable=?,"
-                   + "estado=?, "
-                   + "descripcion=? "
-                   + "where id=?";
-    
-            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
-            pstmt.setString(1, modelo.getTarea());
-            
-            
-            //Para insertar la fecha:
-            java.sql.Date fechaSQL = java.sql.Date.valueOf(modelo.getFecha());
-            pstmt.setDate(2, fechaSQL);
-            
-            
-            pstmt.setString(3, modelo.getResponsable());
-            pstmt.setString(4, modelo.getEstado());
-            pstmt.setString(5, modelo.getDescripcion());
-            pstmt.setInt(6, modelo.getId());
-            
-            
-            pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(vista, "¡Se actualizó la tarea con exito!", "Información", JOptionPane.INFORMATION_MESSAGE);
+            modelo = new Tarea(generarID());
 
-            
-       } 
-       catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
+            //Debe estar seleccionada una linea para agregarla
+            int rec = vista.TablaTareasPrincipales.getSelectedRow();
+            if (rec == -1) {
+                JOptionPane.showMessageDialog(vista, "Debe de seleccionar una fila primero", "Seleccione fila", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+
+            //Se extraen los datos de la fila seleccionada:
+            //ID:
+
+            try{
+            int idSeleccionado = Integer.parseInt(vista.TablaTareasPrincipales.getValueAt(rec, 0).toString());
+            modelo.setId(idSeleccionado);
+
+
+            String tareaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 1).toString();
+            modelo.setTarea(tareaSeleccionada);
+
+            String FechaSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 2).toString();
+            modelo.setFecha(FechaSeleccionada);
+
+            String ResponsableSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 3).toString();
+            modelo.setResponsable(ResponsableSeleccionado);
+
+            String EstadoSeleccionado = vista.TablaTareasPrincipales.getValueAt(rec, 4).toString();
+            modelo.setEstado(EstadoSeleccionado);
+
+            String DescripcionSeleccionada = vista.TablaTareasPrincipales.getValueAt(rec, 5).toString();
+            modelo.setDescripcion(DescripcionSeleccionada);
+            }
+            catch(NullPointerException e){
+                JOptionPane.showMessageDialog(vista, "Debe de completar todos los campos para agregar una tarea", "Complete todos los campos", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+
+           try {
+               String sql = "UPDATE lista_tareas "
+                       + "set tarea=?, "
+                       + "fecha=?,"
+                       + "responsable=?,"
+                       + "estado=?, "
+                       + "descripcion=? "
+                       + "where id=?";
+
+                PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
+                pstmt.setString(1, modelo.getTarea());
+
+
+                //Para insertar la fecha:
+                java.sql.Date fechaSQL = java.sql.Date.valueOf(modelo.getFecha());
+                pstmt.setDate(2, fechaSQL);
+
+
+                pstmt.setString(3, modelo.getResponsable());
+                pstmt.setString(4, modelo.getEstado());
+                pstmt.setString(5, modelo.getDescripcion());
+                pstmt.setInt(6, modelo.getId());
+
+
+                pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(vista, "¡Se actualizó la tarea con exito!", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+
+           } 
+           catch (SQLException e) 
+            {
+                e.printStackTrace();
+            }
        
-       mostrarDatos();
+            mostrarDatos();
 
 
     

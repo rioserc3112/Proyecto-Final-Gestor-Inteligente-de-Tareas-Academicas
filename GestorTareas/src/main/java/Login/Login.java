@@ -5,8 +5,12 @@
 package Login;
 
 import Controlador.ControladorTareas;
+import Datos.Conexion;
 import Modelo.Tarea;
 import Vista.FormularioPrincipal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,6 +18,8 @@ import javax.swing.JOptionPane;
  * @author amanda
  */
 public class Login extends javax.swing.JFrame {
+    
+    private Conexion conectar = new Conexion();
 
     /**
      * Creates new form Login
@@ -36,7 +42,7 @@ public class Login extends javax.swing.JFrame {
         lblCorreo = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        lblPassword = new javax.swing.JTextField();
+        txtContrasena = new javax.swing.JTextField();
         btnEntrar = new javax.swing.JButton();
         btnCrearCuenta = new javax.swing.JButton();
         btnMensaje = new javax.swing.JButton();
@@ -63,9 +69,9 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("Contraseña:");
 
-        lblPassword.addActionListener(new java.awt.event.ActionListener() {
+        txtContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblPasswordActionPerformed(evt);
+                txtContrasenaActionPerformed(evt);
             }
         });
 
@@ -113,7 +119,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(btnCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnMensaje)
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
             .addGroup(PanelLoginLayout.createSequentialGroup()
                 .addContainerGap()
@@ -133,7 +139,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(PanelLoginLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
@@ -157,9 +163,9 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblPasswordActionPerformed
+    private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblPasswordActionPerformed
+    }//GEN-LAST:event_txtContrasenaActionPerformed
 
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
         JOptionPane.showMessageDialog(this, "Mande un Sinpe al equipo de Soporte de IT al 8888-1000 para reiniciar su contraseña");
@@ -172,10 +178,58 @@ public class Login extends javax.swing.JFrame {
     
     //Cuando el usuario presiona el bton de login
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // TODO add your handling code here:
+        boolean encontrado = false;
+        int indice = 0;// El indice para recorrer la tabla de la base de datos
         
-        //Si lo datos estan correctos usar esta funcion para iniciar el programa
-        iniciarPrograma();
+        //Si el correo o la contraseña esta en blanco
+        if(txtCorreo.getText().isBlank() || txtContrasena.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Ingrese un correo y contraseña", "Introduzca datos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        
+        try
+        {
+            PreparedStatement da = conectar.Conectar().prepareStatement("select * from usuarios"); 
+            ResultSet tbl = da.executeQuery();
+            
+            
+            while(tbl.next())
+            { 
+         
+                String correo = tbl.getString("correo"); 
+                String contrasena = tbl.getString("contrasena"); 
+                
+                //Verificar si correo y contraseña conciden con la entrada de base de datos
+
+                
+                
+                if(correo.equals(txtCorreo.getText()) && contrasena.equals(txtContrasena.getText())){
+                    //Si lo datos estan correctos usar esta funcion para iniciar el programa
+                    iniciarPrograma();
+                    encontrado = true;
+                    return;
+                }
+                
+                if(correo.equals(txtCorreo.getText())){
+                    JOptionPane.showMessageDialog(null, "La contraseña no coincide con la cuenta introducida", "Usuario inexistente", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                indice++; 
+            }
+            if(encontrado == false){
+                JOptionPane.showMessageDialog(null, "El correo introducido no existe, intente nuevamente", "Usuario inexistente", JOptionPane.WARNING_MESSAGE);
+            
+            }
+        }
+        
+        catch(SQLException e)
+        {
+
+            e.printStackTrace();
+        }
+        
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
@@ -237,8 +291,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnMensaje;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblCorreo;
-    private javax.swing.JTextField lblPassword;
     private javax.swing.JLabel lblTituloInicioSesion;
+    private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtCorreo;
     // End of variables declaration//GEN-END:variables
 }
