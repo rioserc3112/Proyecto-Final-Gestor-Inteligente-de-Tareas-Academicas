@@ -215,7 +215,7 @@ public class Login extends javax.swing.JFrame {
                 
                 if(usuario.getCorreo().equals(txtCorreo.getText()) && usuario.getContrasena().equals(txtContrasena.getText())){
                     //Si lo datos estan correctos usar esta funcion para iniciar el programa
-                    JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre(), "Bienvenido", JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(null, "Bienvenid@ " + usuario.getNombre(), "Bienvenid@", JOptionPane.INFORMATION_MESSAGE);
                     iniciarPrograma(usuario);
                     encontrado = true;
                     return;
