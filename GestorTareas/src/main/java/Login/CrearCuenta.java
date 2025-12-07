@@ -414,6 +414,7 @@ public class CrearCuenta extends javax.swing.JFrame {
             
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "¡Se agregó el usuario correctamente!", "Agregado", JOptionPane.INFORMATION_MESSAGE);
+            this.setVisible(false);
             
        } 
        catch (SQLException e) 

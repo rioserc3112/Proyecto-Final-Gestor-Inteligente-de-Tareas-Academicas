@@ -29,7 +29,6 @@ public class ControladorTareas {
     
     //Usuario que se encuentra logeado
     private Usuario usuarioRegistrado;
-
     
     public ControladorTareas(Tarea modelo, FormularioPrincipal vista, Usuario usuarioRegistrado) {
         this.modelo = modelo;
@@ -115,11 +114,14 @@ public class ControladorTareas {
     
     public int contarRegistros(){
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM lista_tareas"; //Regresa la cuenta de registros de la tabla
+        String sql = "SELECT COUNT(*) FROM lista_tareas where usuario=?"; //Regresa la cuenta de registros de la tabla
 
-        try (
+        try 
+        {
             PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery()) {
+        
+            pstmt.setString(1, usuarioRegistrado.getCorreo());
+            ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 count = rs.getInt(1);
