@@ -2,13 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Vista;
+package Login;
+
+import Controlador.ControladorTareas;
+import Datos.Conexion;
+import Modelo.Tarea;
+import Modelo.Usuario;
+import Vista.FormularioPrincipal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author amanda
  */
 public class Login extends javax.swing.JFrame {
+    
+    private Conexion conectar = new Conexion();
 
     /**
      * Creates new form Login
@@ -31,7 +43,7 @@ public class Login extends javax.swing.JFrame {
         lblCorreo = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        lblPassword = new javax.swing.JTextField();
+        txtContrasena = new javax.swing.JTextField();
         btnEntrar = new javax.swing.JButton();
         btnCrearCuenta = new javax.swing.JButton();
         btnMensaje = new javax.swing.JButton();
@@ -58,9 +70,9 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("Contraseña:");
 
-        lblPassword.addActionListener(new java.awt.event.ActionListener() {
+        txtContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblPasswordActionPerformed(evt);
+                txtContrasenaActionPerformed(evt);
             }
         });
 
@@ -74,6 +86,11 @@ public class Login extends javax.swing.JFrame {
 
         btnCrearCuenta.setBackground(new java.awt.Color(204, 255, 255));
         btnCrearCuenta.setText("Crear cuenta");
+        btnCrearCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearCuentaActionPerformed(evt);
+            }
+        });
 
         btnMensaje.setFont(new java.awt.Font("Nimbus Sans", 2, 18)); // NOI18N
         btnMensaje.setForeground(new java.awt.Color(0, 102, 153));
@@ -103,7 +120,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(btnCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnMensaje)
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
             .addGroup(PanelLoginLayout.createSequentialGroup()
                 .addContainerGap()
@@ -123,7 +140,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(PanelLoginLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
@@ -147,22 +164,100 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblPasswordActionPerformed
+    private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblPasswordActionPerformed
+    }//GEN-LAST:event_txtContrasenaActionPerformed
 
     private void btnMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajeActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Mande un Sinpe al equipo de Soporte de IT al 8888-1000 para reiniciar su contraseña");
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCorreoActionPerformed
 
+    
+    //Cuando el usuario presiona el bton de login
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // TODO add your handling code here:
+        boolean encontrado = false;
+        Usuario usuario = new Usuario();
+        int indice = 0;// El indice para recorrer la tabla de la base de datos
+        
+        //Si el correo o la contraseña esta en blanco
+        if(txtCorreo.getText().isBlank() || txtContrasena.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Ingrese un correo y contraseña", "Introduzca datos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        
+        try
+        {
+            //Se busca el correo en la base de datos
+            String sql = "select * from usuarios where correo=?";
+            PreparedStatement da = conectar.Conectar().prepareStatement(sql); 
+            da.setString(1, txtCorreo.getText());
+            ResultSet tbl = da.executeQuery();
+            
+                        
+            while(tbl.next())
+            { 
+                //Se crea usuario segun datos de query de SQL
+                         
+                usuario.setCorreo(tbl.getString("correo")); 
+                usuario.setContrasena(tbl.getString("contrasena")); 
+                usuario.setNombre(tbl.getString("nombre")); 
+                usuario.setApellido1(tbl.getString("apellido1")); 
+                usuario.setApellido2(tbl.getString("apellido2")); 
+                
+                //Verificar si correo y contraseña conciden con la entrada de base de datos
+
+                
+                
+                if(usuario.getCorreo().equals(txtCorreo.getText()) && usuario.getContrasena().equals(txtContrasena.getText())){
+                    //Si lo datos estan correctos usar esta funcion para iniciar el programa
+                    JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre(), "Bienvenido", JOptionPane.OK_OPTION);
+                    iniciarPrograma(usuario);
+                    encontrado = true;
+                    return;
+                }
+                
+                if(usuario.getCorreo().equals(txtCorreo.getText())){
+                    JOptionPane.showMessageDialog(null, "La contraseña no coincide con la cuenta introducida", "Usuario inexistente", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                indice++; 
+            }
+            if(encontrado == false){
+                JOptionPane.showMessageDialog(null, "El correo introducido no existe, intente nuevamente", "Usuario inexistente", JOptionPane.WARNING_MESSAGE);
+            
+            }
+        }
+        
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        
     }//GEN-LAST:event_btnEntrarActionPerformed
 
+    private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
+        CrearCuenta FormCrearCuenta = new CrearCuenta();
+        
+        FormCrearCuenta.setVisible(true);
+    }//GEN-LAST:event_btnCrearCuentaActionPerformed
+
+    
+    //Si el usuario tiene los datos de la cuenta correctos
+    private void iniciarPrograma(Usuario usuarioRegistrado){
+        FormularioPrincipal vista = new FormularioPrincipal();
+        Tarea modelo = new Tarea();
+
+        ControladorTareas controlador = new ControladorTareas(modelo, vista, usuarioRegistrado);
+        
+        vista.setVisible(true);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -205,8 +300,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnMensaje;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblCorreo;
-    private javax.swing.JTextField lblPassword;
     private javax.swing.JLabel lblTituloInicioSesion;
+    private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtCorreo;
     // End of variables declaration//GEN-END:variables
 }
