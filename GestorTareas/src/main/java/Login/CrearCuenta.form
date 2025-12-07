@@ -89,15 +89,10 @@
                                       <Component id="txtCorreo" alignment="0" min="-2" pref="271" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblCorreo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblNombre" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblApellido1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblApellido2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace pref="43" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lblCorreo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblNombre" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblApellido1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblApellido2" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="40" max="32767" attributes="0"/>
                       </Group>
@@ -293,7 +288,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="0" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="textoaqui"/>
+            <Property name="text" type="java.lang.String" value="texto de error aqui"/>
           </Properties>
         </Component>
       </SubComponents>

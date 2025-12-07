@@ -134,7 +134,7 @@ public class CrearCuenta extends javax.swing.JFrame {
 
         txtAdvertenciaCorreo.setBackground(new java.awt.Color(25, 25, 25));
         txtAdvertenciaCorreo.setForeground(new java.awt.Color(255, 0, 51));
-        txtAdvertenciaCorreo.setText("textoaqui");
+        txtAdvertenciaCorreo.setText("texto de error aqui");
 
         javax.swing.GroupLayout PanelLoginLayout = new javax.swing.GroupLayout(PanelLogin);
         PanelLogin.setLayout(PanelLoginLayout);
@@ -167,13 +167,10 @@ public class CrearCuenta extends javax.swing.JFrame {
                                     .addComponent(txtApellido1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(PanelLoginLayout.createSequentialGroup()
-                                .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblCorreo)
-                                    .addComponent(lblNombre)
-                                    .addComponent(lblApellido1)
-                                    .addComponent(lblApellido2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblCorreo)
+                            .addComponent(lblNombre)
+                            .addComponent(lblApellido1)
+                            .addComponent(lblApellido2))
                         .addContainerGap(40, Short.MAX_VALUE))
                     .addGroup(PanelLoginLayout.createSequentialGroup()
                         .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

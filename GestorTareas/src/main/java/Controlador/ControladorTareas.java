@@ -6,6 +6,7 @@ package Controlador;
 
 import Datos.Conexion;
 import Modelo.Tarea;
+import Modelo.Usuario;
 import Vista.FormularioPrincipal;
 
 import java.awt.event.ActionEvent;
@@ -25,11 +26,18 @@ public class ControladorTareas {
     private Tarea modelo;
     private FormularioPrincipal vista;
     private Conexion conectar = new Conexion();
+    
+    //Usuario que se encuentra logeado
+    private Usuario usuarioRegistrado;
 
     
-    public ControladorTareas(Tarea modelo, FormularioPrincipal vista) {
+    public ControladorTareas(Tarea modelo, FormularioPrincipal vista, Usuario usuarioRegistrado) {
         this.modelo = modelo;
         this.vista = vista;
+        this.usuarioRegistrado = usuarioRegistrado;
+        
+        //Se pone el usuario en la esquina del formulario
+        vista.lblUser.setText(usuarioRegistrado.getApellido1() + ", " + usuarioRegistrado.getNombre());
                 
         //Aqui va todos los Action Listeners
         contador = buscarUltimoID();
@@ -187,7 +195,7 @@ public class ControladorTareas {
             
        
        try {
-           String sql = "INSERT INTO lista_tareas (id,tarea,fecha,responsable,estado,descripcion) VALUES (?,?,?,?,?,?)";
+           String sql = "INSERT INTO lista_tareas (id,tarea,fecha,responsable,estado,descripcion,usuario) VALUES (?,?,?,?,?,?,?)";
     
            PreparedStatement pstmt = conectar.Conectar().prepareStatement(sql); 
             pstmt.setInt(1, modelo.getId());
@@ -201,6 +209,7 @@ public class ControladorTareas {
             pstmt.setString(4, modelo.getResponsable());
             pstmt.setString(5,modelo.getEstado());
             pstmt.setString(6,modelo.getDescripcion());
+            pstmt.setString(7,usuarioRegistrado.getCorreo());
             
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(vista, "¡Se agregaron los datos correctamente!", "Agregado", JOptionPane.INFORMATION_MESSAGE);
@@ -423,7 +432,8 @@ public class ControladorTareas {
         
         try
         {
-            PreparedStatement da = conectar.Conectar().prepareStatement("select * from lista_tareas"); 
+            PreparedStatement da = conectar.Conectar().prepareStatement("select * from lista_tareas where usuario=?"); 
+            da.setString(1, usuarioRegistrado.getCorreo());
             ResultSet tbl = da.executeQuery();
             
             

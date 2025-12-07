@@ -7,6 +7,7 @@ package Login;
 import Controlador.ControladorTareas;
 import Datos.Conexion;
 import Modelo.Tarea;
+import Modelo.Usuario;
 import Vista.FormularioPrincipal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -179,6 +180,7 @@ public class Login extends javax.swing.JFrame {
     //Cuando el usuario presiona el bton de login
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         boolean encontrado = false;
+        Usuario usuario = new Usuario();
         int indice = 0;// El indice para recorrer la tabla de la base de datos
         
         //Si el correo o la contraseña esta en blanco
@@ -190,28 +192,36 @@ public class Login extends javax.swing.JFrame {
         
         try
         {
-            PreparedStatement da = conectar.Conectar().prepareStatement("select * from usuarios"); 
+            //Se busca el correo en la base de datos
+            String sql = "select * from usuarios where correo=?";
+            PreparedStatement da = conectar.Conectar().prepareStatement(sql); 
+            da.setString(1, txtCorreo.getText());
             ResultSet tbl = da.executeQuery();
             
-            
+                        
             while(tbl.next())
             { 
-         
-                String correo = tbl.getString("correo"); 
-                String contrasena = tbl.getString("contrasena"); 
+                //Se crea usuario segun datos de query de SQL
+                         
+                usuario.setCorreo(tbl.getString("correo")); 
+                usuario.setContrasena(tbl.getString("contrasena")); 
+                usuario.setNombre(tbl.getString("nombre")); 
+                usuario.setApellido1(tbl.getString("apellido1")); 
+                usuario.setApellido2(tbl.getString("apellido2")); 
                 
                 //Verificar si correo y contraseña conciden con la entrada de base de datos
 
                 
                 
-                if(correo.equals(txtCorreo.getText()) && contrasena.equals(txtContrasena.getText())){
+                if(usuario.getCorreo().equals(txtCorreo.getText()) && usuario.getContrasena().equals(txtContrasena.getText())){
                     //Si lo datos estan correctos usar esta funcion para iniciar el programa
-                    iniciarPrograma();
+                    JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre(), "Bienvenido", JOptionPane.OK_OPTION);
+                    iniciarPrograma(usuario);
                     encontrado = true;
                     return;
                 }
                 
-                if(correo.equals(txtCorreo.getText())){
+                if(usuario.getCorreo().equals(txtCorreo.getText())){
                     JOptionPane.showMessageDialog(null, "La contraseña no coincide con la cuenta introducida", "Usuario inexistente", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -226,7 +236,6 @@ public class Login extends javax.swing.JFrame {
         
         catch(SQLException e)
         {
-
             e.printStackTrace();
         }
         
@@ -240,11 +249,11 @@ public class Login extends javax.swing.JFrame {
 
     
     //Si el usuario tiene los datos de la cuenta correctos
-    private void iniciarPrograma(){
+    private void iniciarPrograma(Usuario usuarioRegistrado){
         FormularioPrincipal vista = new FormularioPrincipal();
         Tarea modelo = new Tarea();
 
-        ControladorTareas controlador = new ControladorTareas(modelo, vista);
+        ControladorTareas controlador = new ControladorTareas(modelo, vista, usuarioRegistrado);
         
         vista.setVisible(true);
     }
